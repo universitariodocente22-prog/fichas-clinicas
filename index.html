@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Fichas Clínicas Kinesiológicas</title>
+<style>
+  :root{
+    --azul:#1b4965; --azul-fondo:#eaf4fb; --gris:#616161; --borde:#c9d6de;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:'Segoe UI', Arial, Helvetica, sans-serif; margin:0; padding:0;
+    background:#f2f6f9; color:#1c2b33;
+  }
+  .wrap{max-width:640px; margin:0 auto; padding:16px;}
+  header{
+    background:linear-gradient(135deg,var(--azul),#0d3049); color:#fff;
+    padding:22px 20px; border-radius:10px; margin-bottom:18px; text-align:center;
+  }
+  header h1{margin:0 0 4px 0; font-size:1.25em;}
+  header p{margin:0; font-size:.85em; opacity:.9;}
+
+  .menu{display:flex; flex-direction:column; gap:12px;}
+  .menu a{
+    display:flex; align-items:center; gap:12px;
+    background:#fff; border:1px solid var(--borde); border-radius:10px;
+    padding:14px 16px; text-decoration:none; color:#1c2b33;
+    box-shadow:0 1px 3px rgba(0,0,0,.05); transition:transform .1s, box-shadow .1s;
+  }
+  .menu a:hover, .menu a:active{
+    transform:translateY(-1px); box-shadow:0 3px 8px rgba(0,0,0,.1); border-color:var(--azul);
+  }
+  .menu .icon{font-size:1.6em; flex-shrink:0;}
+  .menu .text b{display:block; font-size:.98em; color:var(--azul);}
+  .menu .text span{display:block; font-size:.8em; color:var(--gris); margin-top:2px;}
+
+  footer{text-align:center; font-size:.75em; color:var(--gris); margin-top:24px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Fichas Clínicas Kinesiológicas</h1>
+    <p>Seleccione la evaluación que desea realizar</p>
+  </header>
+
+  <div class="menu">
+    <a href="ficha_goniometria.html">
+      <span class="icon">📐</span>
+      <span class="text">
+        <b>Evaluación Goniométrica</b>
+        <span>Rangos articulares — tabla referencial y clasificación automática</span>
+      </span>
+    </a>
+
+    <!-- Copie el bloque de arriba y modifíquelo para agregar más fichas.
+         Cambie el href al nombre exacto del archivo .html subido al repositorio,
+         y edite el título y la descripción. -->
+
+    <!--
+    <a href="postural.html">
+      <span class="icon">🧍</span>
+      <span class="text">
+        <b>Evaluación Postural Dinámica</b>
+        <span>FRT, TUG, STS, Y Balance, SLS, SEBT</span>
+      </span>
+    </a>
+
+    <a href="respiratoria.html">
+      <span class="icon">🫁</span>
+      <span class="text">
+        <b>Biomecánica Respiratoria</b>
+        <span>Moll & Wright, Diafragmática, Hoover, Índice de movilidad costal</span>
+      </span>
+    </a>
+    -->
+  </div>
+
+  <footer>Fichas clínicas interactivas — Kinesiología</footer>
+</div>
+</body>
+</html>
