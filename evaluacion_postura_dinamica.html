@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Evaluación de la Postura Dinámica – Biomecánica I</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --teal: #1a6b72;
+    --teal-light: #22909a;
+    --gold: #c9a84c;
+    --gold-light: #e3c97a;
+    --cream: #f8f4ee;
+    --white: #ffffff;
+    --gray-100: #f1ede7;
+    --gray-200: #e2ddd6;
+    --gray-400: #9a9188;
+    --gray-600: #5c5750;
+    --risk-normal: #1e7a4a;
+    --risk-moderate: #b07d15;
+    --risk-high: #c0392b;
+    --risk-normal-bg: #eaf7f0;
+    --risk-moderate-bg: #fdf5e3;
+    --risk-high-bg: #fdecea;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--navy);
+    min-height: 100vh;
+  }
+
+  /* ── PAGE WRAPPER ── */
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--navy);
+    color: var(--white);
+    padding: 2.5rem 2.5rem 2rem;
+    border-radius: 16px 16px 0 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 0%, rgba(26,107,114,.55) 0%, transparent 65%),
+                radial-gradient(ellipse at 10% 110%, rgba(201,168,76,.2) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .header-inner { position: relative; z-index: 1; }
+  .header-top { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.25rem; }
+  .header-icon {
+    width: 52px; height: 52px;
+    background: var(--teal);
+    border-radius: 14px;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .header-icon svg { width: 28px; height: 28px; }
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.85rem;
+    line-height: 1.15;
+  }
+  .header h1 span { color: var(--gold-light); }
+  .header-sub {
+    font-size: .82rem;
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+    margin-top: .35rem;
+  }
+  .header-divider {
+    height: 1px;
+    background: rgba(255,255,255,.12);
+    margin: 1.4rem 0;
+  }
+  .patient-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: .85rem;
+  }
+  .field-group label {
+    display: block;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.45);
+    margin-bottom: .3rem;
+  }
+  .field-group input, .field-group select {
+    width: 100%;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 8px;
+    padding: .55rem .8rem;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: .9rem;
+    outline: none;
+    transition: border-color .2s, background .2s;
+  }
+  .field-group input::placeholder { color: rgba(255,255,255,.3); }
+  .field-group input:focus, .field-group select:focus {
+    border-color: var(--gold);
+    background: rgba(255,255,255,.13);
+  }
+  .field-group select option { color: var(--navy); background: var(--white); }
+
+  /* ── CARD SHELL ── */
+  .card-shell {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-top: none;
+    border-radius: 0 0 16px 16px;
+    padding: 2rem 2.5rem 2.5rem;
+  }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem;
+    color: var(--teal);
+    border-bottom: 2px solid var(--gray-200);
+    padding-bottom: .6rem;
+    margin: 2rem 0 1.25rem;
+  }
+  .section-title:first-child { margin-top: 0; }
+
+  /* ── TEST CARD ── */
+  .test-card {
+    background: var(--cream);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+    transition: box-shadow .2s;
+  }
+  .test-card:hover { box-shadow: 0 4px 18px rgba(13,27,42,.07); }
+
+  .test-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--navy);
+    color: var(--white);
+  }
+  .test-number {
+    width: 32px; height: 32px;
+    background: var(--gold);
+    color: var(--navy);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-weight: 700;
+    font-size: .85rem;
+    flex-shrink: 0;
+  }
+  .test-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.05rem;
+  }
+  .test-abbr {
+    font-size: .75rem;
+    color: var(--gold-light);
+    font-weight: 500;
+    letter-spacing: .05em;
+  }
+
+  .test-body { padding: 1.2rem 1.25rem; }
+  .test-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 600px) { .test-row { grid-template-columns: 1fr; } }
+
+  /* ── INPUTS ── */
+  .input-wrap { display: flex; flex-direction: column; gap: .3rem; }
+  .input-wrap label {
+    font-size: .75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--gray-600);
+  }
+  .input-wrap input, .input-wrap select, .input-wrap textarea {
+    background: var(--white);
+    border: 1.5px solid var(--gray-200);
+    border-radius: 8px;
+    padding: .6rem .85rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .92rem;
+    color: var(--navy);
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    width: 100%;
+  }
+  .input-wrap input:focus, .input-wrap select:focus, .input-wrap textarea:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(26,107,114,.12);
+  }
+  .input-wrap textarea { resize: vertical; min-height: 72px; }
+
+  /* ── RISK BADGE ── */
+  .risk-display {
+    margin-top: .85rem;
+    padding: .6rem 1rem;
+    border-radius: 8px;
+    font-size: .85rem;
+    font-weight: 600;
+    display: none;
+    align-items: center;
+    gap: .5rem;
+    transition: all .3s;
+  }
+  .risk-display.visible { display: flex; }
+  .risk-display.normal { background: var(--risk-normal-bg); color: var(--risk-normal); border: 1px solid #a8e6c4; }
+  .risk-display.moderate { background: var(--risk-moderate-bg); color: var(--risk-moderate); border: 1px solid #f0d08a; }
+  .risk-display.high { background: var(--risk-high-bg); color: var(--risk-high); border: 1px solid #f5b7b1; }
+  .risk-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink:0; }
+
+  /* ── REFERENCE TABLE ── */
+  .ref-table-wrap { margin-top: 1rem; }
+  .ref-toggle {
+    background: none; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .8rem; font-weight: 600;
+    color: var(--teal-light);
+    display: flex; align-items: center; gap: .4rem;
+    padding: 0; letter-spacing: .04em;
+    text-decoration: underline dotted;
+  }
+  .ref-toggle:hover { color: var(--teal); }
+  .ref-table {
+    display: none;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .82rem;
+    margin-top: .6rem;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+  }
+  .ref-table.open { display: table; }
+  .ref-table th {
+    background: var(--navy);
+    color: var(--white);
+    padding: .45rem .8rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: .75rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .ref-table td {
+    padding: .4rem .8rem;
+    border-bottom: 1px solid var(--gray-200);
+    background: var(--white);
+  }
+  .ref-table tr:last-child td { border-bottom: none; }
+  .ref-table .tag-normal { color: var(--risk-normal); font-weight: 600; }
+  .ref-table .tag-moderate { color: var(--risk-moderate); font-weight: 600; }
+  .ref-table .tag-high { color: var(--risk-high); font-weight: 600; }
+
+  /* ── OBSERVATIONS ── */
+  .obs-section { margin-top: 2rem; }
+
+  /* ── ACTIONS ── */
+  .actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .75rem 1.6rem;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.15); }
+  .btn:active { transform: translateY(0); }
+  .btn-outline {
+    background: var(--white);
+    border: 2px solid var(--gray-200);
+    color: var(--gray-600);
+  }
+  .btn-outline:hover { border-color: var(--gray-400); }
+  .btn-teal {
+    background: var(--teal);
+    color: var(--white);
+  }
+  .btn-gold {
+    background: var(--gold);
+    color: var(--navy);
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 2rem; right: 2rem;
+    background: var(--navy);
+    color: var(--white);
+    padding: .85rem 1.4rem;
+    border-radius: 10px;
+    font-size: .9rem;
+    font-weight: 500;
+    display: flex; align-items: center; gap: .6rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,.2);
+    transform: translateY(120%);
+    opacity: 0;
+    transition: all .35s cubic-bezier(.34,1.56,.64,1);
+    z-index: 100;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── SUMMARY BOX ── */
+  .summary-box {
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    display: none;
+  }
+  .summary-box.visible { display: block; }
+  .summary-box h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--gold-light);
+  }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .75rem; }
+  .summary-item {
+    background: rgba(255,255,255,.07);
+    border-radius: 8px;
+    padding: .7rem .85rem;
+  }
+  .summary-item .si-name { font-size: .72rem; font-weight: 600; color: rgba(255,255,255,.45); text-transform: uppercase; letter-spacing: .07em; margin-bottom: .3rem; }
+  .summary-item .si-value { font-size: .98rem; font-weight: 600; }
+  .summary-item .si-risk { font-size: .78rem; margin-top: .2rem; }
+  .si-risk.normal { color: #6ee7aa; }
+  .si-risk.moderate { color: var(--gold-light); }
+  .si-risk.high { color: #f8a0a0; }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: #fff; }
+    .page { padding: 0; max-width: 100%; }
+    .btn, .actions, .ref-toggle { display: none !important; }
+    .header { border-radius: 0; }
+    .card-shell { border-radius: 0; }
+    .test-card { break-inside: avoid; }
+    .ref-table { display: table !important; }
+    .summary-box { break-inside: avoid; }
+    .toast { display: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ═══ HEADER ═══ -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-top">
+        <div class="header-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5z"/>
+            <path d="M5 20a7 7 0 0 1 14 0"/>
+            <line x1="12" y1="12" x2="12" y2="20"/>
+            <line x1="9" y1="15" x2="12" y2="12"/>
+            <line x1="15" y1="15" x2="12" y2="12"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Evaluación de la <span>Postura Dinámica</span></h1>
+          <div class="header-sub">Biomecánica I · Ficha de Evaluación Clínica</div>
+        </div>
+      </div>
+
+      <div class="header-divider"></div>
+
+      <div class="patient-grid">
+        <div class="field-group">
+          <label>Nombre del Paciente</label>
+          <input type="text" id="pat-name" placeholder="Apellido, Nombre"/>
+        </div>
+        <div class="field-group">
+          <label>Edad</label>
+          <input type="number" id="pat-age" placeholder="años" min="0" max="120"/>
+        </div>
+        <div class="field-group">
+          <label>Sexo</label>
+          <select id="pat-sex">
+            <option value="">— seleccionar —</option>
+            <option>Masculino</option>
+            <option>Femenino</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Fecha de Evaluación</label>
+          <input type="date" id="pat-date"/>
+        </div>
+        <div class="field-group">
+          <label>Evaluador / Docente</label>
+          <input type="text" id="pat-eval" placeholder="Nombre del evaluador"/>
+        </div>
+        <div class="field-group">
+          <label>Longitud de pierna (cm)</label>
+          <input type="number" id="leg-length" placeholder="cm" min="0" step="0.1" oninput="updateYBalance()"/>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ BODY ═══ -->
+  <div class="card-shell">
+    <div class="section-title">Tests de Evaluación Postural Dinámica</div>
+
+    <!-- ─── 1. FRT ─── -->
+    <div class="test-card">
+      <div class="test-header">
+        <div class="test-number">1</div>
+        <div>
+          <div class="test-name">Functional Reach Test</div>
+          <div class="test-abbr">FRT</div>
+        </div>
+      </div>
+      <div class="test-body">
+        <div class="test-row">
+          <div class="input-wrap">
+            <label>Distancia de alcance (cm)</label>
+            <input type="number" id="frt-val" placeholder="ej. 28" step="0.1" oninput="evaluate('frt')"/>
+          </div>
+          <div class="input-wrap">
+            <label>Miembro evaluado</label>
+            <select id="frt-side">
+              <option value="">— —</option>
+              <option>Derecho</option>
+              <option>Izquierdo</option>
+              <option>Bilateral</option>
+            </select>
+          </div>
+        </div>
+        <div class="risk-display" id="frt-risk"></div>
+        <div class="ref-table-wrap">
+          <button class="ref-toggle" onclick="toggleRef('frt-ref')">▸ Ver valores de referencia</button>
+          <table class="ref-table" id="frt-ref">
+            <thead><tr><th>Rango</th><th>Clasificación</th></tr></thead>
+            <tbody>
+              <tr><td>≥ 25 cm</td><td class="tag-normal">Normal</td></tr>
+              <tr><td>15 – 25 cm</td><td class="tag-moderate">Riesgo moderado</td></tr>
+              <tr><td>&lt; 15 cm</td><td class="tag-high">Alto riesgo</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 2. TUG ─── -->
+    <div class="test-card">
+      <div class="test-header">
+        <div class="test-number">2</div>
+        <div>
+          <div class="test-name">Timed Up and Go</div>
+          <div class="test-abbr">TUG</div>
+        </div>
+      </div>
+      <div class="test-body">
+        <div class="test-row">
+          <div class="input-wrap">
+            <label>Tiempo (segundos)</label>
+            <input type="number" id="tug-val" placeholder="ej. 9.5" step="0.1" oninput="evaluate('tug')"/>
+          </div>
+          <div class="input-wrap">
+            <label>Intentos</label>
+            <select id="tug-attempts">
+              <option value="">— —</option>
+              <option>1 intento</option>
+              <option>2 intentos (promedio)</option>
+              <option>3 intentos (promedio)</option>
+            </select>
+          </div>
+        </div>
+        <div class="risk-display" id="tug-risk"></div>
+        <div class="ref-table-wrap">
+          <button class="ref-toggle" onclick="toggleRef('tug-ref')">▸ Ver valores de referencia</button>
+          <table class="ref-table" id="tug-ref">
+            <thead><tr><th>Rango</th><th>Clasificación</th></tr></thead>
+            <tbody>
+              <tr><td>&lt; 10 s</td><td class="tag-normal">Normal</td></tr>
+              <tr><td>10 – 20 s</td><td class="tag-moderate">Riesgo leve</td></tr>
+              <tr><td>&gt; 20 s</td><td class="tag-high">Riesgo alto</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 3. STS ─── -->
+    <div class="test-card">
+      <div class="test-header">
+        <div class="test-number">3</div>
+        <div>
+          <div class="test-name">Sit to Stand Test – 5 repeticiones</div>
+          <div class="test-abbr">STS</div>
+        </div>
+      </div>
+      <div class="test-body">
+        <div class="test-row">
+          <div class="input-wrap">
+            <label>Tiempo total (segundos)</label>
+            <input type="number" id="sts-val" placeholder="ej. 11.2" step="0.1" oninput="evaluate('sts')"/>
+          </div>
+          <div class="input-wrap">
+            <label>Altura de la silla (cm)</label>
+            <input type="number" id="sts-chair" placeholder="ej. 43" step="1"/>
+          </div>
+        </div>
+        <div class="risk-display" id="sts-risk"></div>
+        <div class="ref-table-wrap">
+          <button class="ref-toggle" onclick="toggleRef('sts-ref')">▸ Ver valores de referencia</button>
+          <table class="ref-table" id="sts-ref">
+            <thead><tr><th>Rango</th><th>Clasificación</th></tr></thead>
+            <tbody>
+              <tr><td>&lt; 12 s</td><td class="tag-normal">Normal</td></tr>
+              <tr><td>12 – 15 s</td><td class="tag-moderate">Riesgo leve</td></tr>
+              <tr><td>&gt; 15 s</td><td class="tag-high">Déficit funcional</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 4. Y Balance ─── -->
+    <div class="test-card">
+      <div class="test-header">
+        <div class="test-number">4</div>
+        <div>
+          <div class="test-name">Y Balance Test</div>
+          <div class="test-abbr">YBT</div>
+        </div>
+      </div>
+      <div class="test-body">
+        <div style="margin-bottom:.7rem;font-size:.8rem;color:var(--gray-600);">Ingrese las distancias en cm para cada dirección (pierna de apoyo derecha e izquierda).</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div>
+            <div style="font-weight:700;font-size:.8rem;color:var(--navy);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em;">Pierna Derecha</div>
+            <div class="input-wrap" style="margin-bottom:.6rem">
+              <label>Anterior (cm)</label>
+              <input type="number" id="ybt-r-ant" step="0.1" placeholder="—" oninput="updateYBalance()"/>
+            </div>
+            <div class="input-wrap" style="margin-bottom:.6rem">
+              <label>Posteromedial (cm)</label>
+              <input type="number" id="ybt-r-pm" step="0.1" placeholder="—" oninput="updateYBalance()"/>
+            </div>
+            <div class="input-wrap">
+              <label>Posterolateral (cm)</label>
+              <input type="number" id="ybt-r-pl" step="0.1" placeholder="—" oninput="updateYBalance()"/>
+            </div>
+          </div>
+          <div>
+            <div style="font-weight:700;font-size:.8rem;color:var(--navy);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em;">Pierna Izquierda</div>
+            <div class="input-wrap" style="margin-bottom:.6rem">
+              <label>Anterior (cm)</label>
+              <input type="number" id="ybt-l-ant" step="0.1" placeholder="—" oninput="updateYBalance()"/>
+            </div>
+            <div class="input-wrap" style="margin-bottom:.6rem">
+              <label>Posteromedial (cm)</label>
+              <input type="number" id="ybt-l-pm" step="0.1" placeholder="—" oninput="updateYBalance()"/>
+            </div>
+            <div class="input-wrap">
+              <label>Posterolateral (cm)</label>
+              <input type="number" id="ybt-l-pl" step="0.1" placeholder="—" oninput="updateYBalance()"/>
+            </div>
+          </div>
+        </div>
+        <div class="risk-display" id="ybt-risk"></div>
+        <div id="ybt-pct" style="margin-top:.6rem;font-size:.84rem;color:var(--gray-600);display:none;"></div>
+        <div class="ref-table-wrap">
+          <button class="ref-toggle" onclick="toggleRef('ybt-ref')">▸ Ver valores de referencia</button>
+          <table class="ref-table" id="ybt-ref">
+            <thead><tr><th>Condición</th><th>Clasificación</th></tr></thead>
+            <tbody>
+              <tr><td>≥ 90% long. pierna</td><td class="tag-normal">Normal</td></tr>
+              <tr><td>&lt; 90% long. pierna</td><td class="tag-high">Déficit</td></tr>
+              <tr><td>Asimetría &gt; 4 cm (anterior)</td><td class="tag-high">Riesgo de lesión</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 5. Single Leg Stance ─── -->
+    <div class="test-card">
+      <div class="test-header">
+        <div class="test-number">5</div>
+        <div>
+          <div class="test-name">Single Leg Stance Dinámico</div>
+          <div class="test-abbr">SLS</div>
+        </div>
+      </div>
+      <div class="test-body">
+        <div class="test-row">
+          <div class="input-wrap">
+            <label>Tiempo pierna derecha (s)</label>
+            <input type="number" id="sls-r" placeholder="ej. 28" step="0.1" oninput="evaluate('sls')"/>
+          </div>
+          <div class="input-wrap">
+            <label>Tiempo pierna izquierda (s)</label>
+            <input type="number" id="sls-l" placeholder="ej. 25" step="0.1" oninput="evaluate('sls')"/>
+          </div>
+        </div>
+        <div class="risk-display" id="sls-risk"></div>
+        <div class="ref-table-wrap">
+          <button class="ref-toggle" onclick="toggleRef('sls-ref')">▸ Ver valores de referencia</button>
+          <table class="ref-table" id="sls-ref">
+            <thead><tr><th>Rango</th><th>Clasificación</th></tr></thead>
+            <tbody>
+              <tr><td>≥ 30 s</td><td class="tag-normal">Normal</td></tr>
+              <tr><td>20 – 29 s</td><td class="tag-moderate">Déficit leve</td></tr>
+              <tr><td>&lt; 20 s</td><td class="tag-high">Déficit significativo</td></tr>
+              <tr><td>&lt; 10 s</td><td class="tag-high">Alto riesgo</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── 6. SEBT ─── -->
+    <div class="test-card">
+      <div class="test-header">
+        <div class="test-number">6</div>
+        <div>
+          <div class="test-name">Star Excursion Balance Test</div>
+          <div class="test-abbr">SEBT</div>
+        </div>
+      </div>
+      <div class="test-body">
+        <div style="margin-bottom:.7rem;font-size:.8rem;color:var(--gray-600);">Registre el alcance máximo (cm) en cada dirección para ambas piernas.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+          <div>
+            <div style="font-weight:700;font-size:.8rem;color:var(--navy);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em;">Pierna Derecha</div>
+            <div class="input-wrap" style="margin-bottom:.5rem"><label>Anterior</label><input type="number" id="sebt-r-ant" step="0.1" placeholder="cm" oninput="evaluateSEBT()"/></div>
+            <div class="input-wrap" style="margin-bottom:.5rem"><label>Anteromedial</label><input type="number" id="sebt-r-am" step="0.1" placeholder="cm" oninput="evaluateSEBT()"/></div>
+            <div class="input-wrap" style="margin-bottom:.5rem"><label>Medial</label><input type="number" id="sebt-r-m" step="0.1" placeholder="cm" oninput="evaluateSEBT()"/></div>
+            <div class="input-wrap" style="margin-bottom:.5rem"><label>Posteromedial</label><input type="number" id="sebt-r-pm" step="0.1" placeholder="cm" oninput="evaluateSEBT()"/></div>
+            <div class="input-wrap" style="margin-bottom:.5rem"><label>Posterior</label><input type="number" id="sebt-r-p" step="0.1" placeholder="cm" oninput="evaluateSEBT()"/></div>
+            <div class="input-wrap" style="margin-bottom:.5rem"><label>Posterolateral</label><input type="number" id="sebt-r-pl" step="0.1" placeholder="cm" oninput="evaluateSEBT()"/></div>
+            <div class="input-wrap" style="margin-bottom:.5rem"><label>Lateral</label><input type="number" id="sebt-r-l" step="0.1" placeholder="cm" oninput="evaluateSEBT()"/></div>
+            <div class="input-wrap"><label>Anterolateral</label><input type="number" id="sebt-r-al" step="0.1" placeholder="cm" oninput="evaluateSEBT()"/></div>
+          </div>
+          <div>
+            <div style="font-weight:700;font-size:.8rem;color:var(--navy);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em;">Pierna Izquierda</div>
+            <div class="input-wrap" style="margin-bottom:.5rem"><label>Anterior</label><input type="number" id="sebt-l-ant" step="0.1" placeholder="cm" oninput="evaluateSEBT()"/></div>
+            <div class="input-wrap" style="margin-bottom:.5rem"><label>Anteromedial</label><input type="number" id="sebt-l-am" step="0.1" placeholder="cm" oninput="evaluateSEBT()"/></div>
+            <div class="input-wrap" style="margin-bottom:.5rem"><label>Medial</label><input type="number" id="sebt-l-m" step="0.1" placeholder="cm" oninput="evaluateSEBT()"/></div>
+            <div class="input-wrap" style="margin-bottom:.5rem"><label>Posteromedial</label><input type="number" id="sebt-l-pm" step="0.1" placeholder="cm" oninput="evaluateSEBT()"/></div>
+            <div class="input-wrap" style="margin-bottom:.5rem"><label>Posterior</label><input type="number" id="sebt-l-p" step="0.1" placeholder="cm" oninput="evaluateSEBT()"/></div>
+            <div class="input-wrap" style="margin-bottom:.5rem"><label>Posterolateral</label><input type="number" id="sebt-l-pl" step="0.1" placeholder="cm" oninput="evaluateSEBT()"/></div>
+            <div class="input-wrap" style="margin-bottom:.5rem"><label>Lateral</label><input type="number" id="sebt-l-l" step="0.1" placeholder="cm" oninput="evaluateSEBT()"/></div>
+            <div class="input-wrap"><label>Anterolateral</label><input type="number" id="sebt-l-al" step="0.1" placeholder="cm" oninput="evaluateSEBT()"/></div>
+          </div>
+        </div>
+        <div class="risk-display" id="sebt-risk"></div>
+        <div class="ref-table-wrap">
+          <button class="ref-toggle" onclick="toggleRef('sebt-ref')">▸ Ver valores de referencia</button>
+          <table class="ref-table" id="sebt-ref">
+            <thead><tr><th>Condición</th><th>Clasificación</th></tr></thead>
+            <tbody>
+              <tr><td>Asimetría &gt; 4 cm en cualquier dirección</td><td class="tag-high">Riesgo de lesión</td></tr>
+              <tr><td>Alcances reducidos bilateralmente</td><td class="tag-moderate">Déficit funcional</td></tr>
+              <tr><td>Alcances simétricos y adecuados</td><td class="tag-normal">Normal</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Observaciones ─── -->
+    <div class="obs-section">
+      <div class="section-title">Observaciones Generales</div>
+      <div class="input-wrap">
+        <label>Hallazgos clínicos y observaciones del evaluador</label>
+        <textarea id="obs-text" rows="4" placeholder="Registre compensaciones posturales, dolor referido, limitaciones del paciente, condiciones del test, etc."></textarea>
+      </div>
+    </div>
+
+    <!-- ─── Resumen ─── -->
+    <div class="summary-box" id="summary-box">
+      <h3>⊕ Resumen de Resultados</h3>
+      <div class="summary-grid" id="summary-grid"></div>
+    </div>
+
+    <!-- ─── Acciones ─── -->
+    <div class="actions">
+      <button class="btn btn-outline" onclick="clearForm()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.61"/></svg>
+        Limpiar
+      </button>
+      <button class="btn btn-teal" onclick="generateSummary()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Generar Resumen
+      </button>
+      <button class="btn btn-gold" onclick="printPDF()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Imprimir / PDF
+      </button>
+    </div>
+
+  </div><!-- end card-shell -->
+</div><!-- end page -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Set today's date ──
+document.getElementById('pat-date').value = new Date().toISOString().split('T')[0];
+
+// ── Toggle reference tables ──
+function toggleRef(id) {
+  const t = document.getElementById(id);
+  const btn = t.previousElementSibling;
+  const open = t.classList.toggle('open');
+  btn.textContent = (open ? '▾' : '▸') + ' Ver valores de referencia';
+}
+
+// ── Risk display helper ──
+function showRisk(el, level, text) {
+  const icons = { normal: '✓', moderate: '⚠', high: '✕' };
+  el.className = 'risk-display visible ' + level;
+  el.innerHTML = `<span class="risk-dot"></span><strong>${icons[level]}</strong> ${text}`;
+}
+
+// ── FRT ──
+function evalFRT(v) {
+  if (v >= 25) return ['normal', 'Normal (≥ 25 cm)'];
+  if (v >= 15) return ['moderate', 'Riesgo moderado (15–25 cm)'];
+  return ['high', 'Alto riesgo (< 15 cm)'];
+}
+
+// ── TUG ──
+function evalTUG(v) {
+  if (v < 10) return ['normal', 'Normal (< 10 s)'];
+  if (v <= 20) return ['moderate', 'Riesgo leve (10–20 s)'];
+  return ['high', 'Riesgo alto (> 20 s)'];
+}
+
+// ── STS ──
+function evalSTS(v) {
+  if (v < 12) return ['normal', 'Normal (< 12 s)'];
+  if (v <= 15) return ['moderate', 'Riesgo leve (12–15 s)'];
+  return ['high', 'Déficit funcional (> 15 s)'];
+}
+
+// ── SLS ──
+function evalSLS(v) {
+  if (v >= 30) return ['normal', 'Normal (≥ 30 s)'];
+  if (v >= 20) return ['moderate', 'Déficit leve (20–29 s)'];
+  if (v >= 10) return ['high', 'Déficit significativo (< 20 s)'];
+  return ['high', 'Alto riesgo (< 10 s)'];
+}
+
+// ── Generic evaluate ──
+function evaluate(test) {
+  const evalFns = { frt: evalFRT, tug: evalTUG, sts: evalSTS };
+  const inputIds = { frt: 'frt-val', tug: 'tug-val', sts: 'sts-val' };
+  const riskId = test + '-risk';
+
+  if (test === 'sls') { evaluateSLS(); return; }
+
+  const val = parseFloat(document.getElementById(inputIds[test]).value);
+  const el = document.getElementById(riskId);
+  if (isNaN(val)) { el.className = 'risk-display'; return; }
+  const [level, text] = evalFns[test](val);
+  showRisk(el, level, text);
+}
+
+// ── SLS ──
+function evaluateSLS() {
+  const r = parseFloat(document.getElementById('sls-r').value);
+  const l = parseFloat(document.getElementById('sls-l').value);
+  const el = document.getElementById('sls-risk');
+  const vals = [r, l].filter(v => !isNaN(v));
+  if (vals.length === 0) { el.className = 'risk-display'; return; }
+  const worst = Math.min(...vals);
+  const [level, text] = evalSLS(worst);
+  const side = isNaN(r) ? 'Izq' : isNaN(l) ? 'Der' : (r < l ? 'Derecha peor' : l < r ? 'Izquierda peor' : 'Simétrico');
+  showRisk(el, level, text + ` · ${side}`);
+}
+
+// ── Y Balance ──
+function updateYBalance() {
+  const ll = parseFloat(document.getElementById('leg-length').value);
+  const fields = ['ybt-r-ant','ybt-r-pm','ybt-r-pl','ybt-l-ant','ybt-l-pm','ybt-l-pl'];
+  const vals = fields.map(id => parseFloat(document.getElementById(id).value));
+  const el = document.getElementById('ybt-risk');
+  const pctEl = document.getElementById('ybt-pct');
+
+  const rAnt = vals[0], lAnt = vals[3];
+  const anyVal = vals.some(v => !isNaN(v));
+  if (!anyVal) { el.className = 'risk-display'; pctEl.style.display='none'; return; }
+
+  let msgs = [], level = 'normal';
+
+  // Asymmetry in anterior
+  if (!isNaN(rAnt) && !isNaN(lAnt)) {
+    const diff = Math.abs(rAnt - lAnt);
+    if (diff > 4) { msgs.push(`Asimetría anterior: ${diff.toFixed(1)} cm > 4 cm`); level = 'high'; }
+  }
+
+  // % leg length
+  if (!isNaN(ll) && ll > 0) {
+    let pctLines = [];
+    const sides = [
+      {name:'Der', a:vals[0], pm:vals[1], pl:vals[2]},
+      {name:'Izq', a:vals[3], pm:vals[4], pl:vals[5]}
+    ];
+    sides.forEach(s => {
+      const measured = [s.a, s.pm, s.pl].filter(v => !isNaN(v));
+      if (measured.length > 0) {
+        const avg = measured.reduce((a,b)=>a+b,0)/measured.length;
+        const pct = (avg/ll)*100;
+        pctLines.push(`${s.name}: ${pct.toFixed(1)}%`);
+        if (pct < 90 && level !== 'high') level = 'high';
+      }
+    });
+    pctEl.textContent = '% Long. pierna — ' + pctLines.join(' | ');
+    pctEl.style.display = 'block';
+  } else { pctEl.style.display='none'; }
+
+  if (msgs.length === 0 && level === 'normal') msgs.push('Sin asimetrías detectadas');
+  showRisk(el, level, msgs.join(' · '));
+}
+
+// ── SEBT ──
+function evaluateSEBT() {
+  const dirs = ['ant','am','m','pm','p','pl','l','al'];
+  const rVals = dirs.map(d => parseFloat(document.getElementById('sebt-r-'+d).value));
+  const lVals = dirs.map(d => parseFloat(document.getElementById('sebt-l-'+d).value));
+  const el = document.getElementById('sebt-risk');
+
+  const hasAny = [...rVals,...lVals].some(v => !isNaN(v));
+  if (!hasAny) { el.className='risk-display'; return; }
+
+  let asymDirs = [];
+  dirs.forEach((d,i) => {
+    if (!isNaN(rVals[i]) && !isNaN(lVals[i])) {
+      const diff = Math.abs(rVals[i]-lVals[i]);
+      if (diff > 4) asymDirs.push(d.toUpperCase()+'('+diff.toFixed(1)+'cm)');
+    }
+  });
+
+  if (asymDirs.length > 0) {
+    showRisk(el, 'high', 'Asimetría > 4 cm en: ' + asymDirs.join(', '));
+  } else {
+    showRisk(el, 'normal', 'Sin asimetrías significativas detectadas');
+  }
+}
+
+// ── Summary ──
+function getRiskLabel(level) {
+  if (level === 'normal') return 'Normal';
+  if (level === 'moderate') return 'Riesgo leve/moderado';
+  return 'Riesgo alto / Déficit';
+}
+
+function generateSummary() {
+  const tests = [
+    { id:'frt', name:'FRT', getVal:()=>document.getElementById('frt-val').value, getLevel:()=>{
+      const v=parseFloat(document.getElementById('frt-val').value);
+      if(isNaN(v))return null;return evalFRT(v);
+    }},
+    { id:'tug', name:'TUG', getVal:()=>document.getElementById('tug-val').value+'s', getLevel:()=>{
+      const v=parseFloat(document.getElementById('tug-val').value);
+      if(isNaN(v))return null;return evalTUG(v);
+    }},
+    { id:'sts', name:'STS', getVal:()=>document.getElementById('sts-val').value+'s', getLevel:()=>{
+      const v=parseFloat(document.getElementById('sts-val').value);
+      if(isNaN(v))return null;return evalSTS(v);
+    }},
+    { id:'sls', name:'SLS', getVal:()=>{
+      const r=document.getElementById('sls-r').value,l=document.getElementById('sls-l').value;
+      return [r?'Der:'+r+'s':'',l?'Izq:'+l+'s':''].filter(Boolean).join(' ');
+    }, getLevel:()=>{
+      const r=parseFloat(document.getElementById('sls-r').value),l=parseFloat(document.getElementById('sls-l').value);
+      const vals=[r,l].filter(v=>!isNaN(v));if(vals.length===0)return null;
+      return evalSLS(Math.min(...vals));
+    }},
+    { id:'ybt', name:'Y Balance', getVal:()=>'Ver detalle', getLevel:()=>{
+      const el=document.getElementById('ybt-risk');
+      if(!el.classList.contains('visible'))return null;
+      if(el.classList.contains('high'))return['high','Déficit / Asimetría'];
+      if(el.classList.contains('moderate'))return['moderate','Moderado'];
+      return['normal','Normal'];
+    }},
+    { id:'sebt', name:'SEBT', getVal:()=>'Ver detalle', getLevel:()=>{
+      const el=document.getElementById('sebt-risk');
+      if(!el.classList.contains('visible'))return null;
+      if(el.classList.contains('high'))return['high','Asimetría detectada'];
+      return['normal','Sin asimetría'];
+    }},
+  ];
+
+  const grid = document.getElementById('summary-grid');
+  grid.innerHTML = '';
+  let hasData = false;
+
+  tests.forEach(t => {
+    const result = t.getLevel();
+    if (!result) return;
+    hasData = true;
+    const [level, label] = result;
+    const val = t.getVal();
+    const item = document.createElement('div');
+    item.className = 'summary-item';
+    item.innerHTML = `<div class="si-name">${t.name}</div><div class="si-value">${val || '—'}</div><div class="si-risk ${level}">${getRiskLabel(level)}</div>`;
+    grid.appendChild(item);
+  });
+
+  const box = document.getElementById('summary-box');
+  if (hasData) {
+    box.classList.add('visible');
+    box.scrollIntoView({behavior:'smooth', block:'nearest'});
+    showToast('✓ Resumen generado');
+  } else {
+    showToast('⚠ Ingrese al menos un valor para generar el resumen');
+  }
+}
+
+// ── Print ──
+function printPDF() {
+  // Open all ref tables for print
+  document.querySelectorAll('.ref-table').forEach(t => t.classList.add('open'));
+  generateSummary();
+  setTimeout(() => window.print(), 300);
+}
+
+// ── Clear ──
+function clearForm() {
+  if (!confirm('¿Desea limpiar todos los datos del formulario?')) return;
+  document.querySelectorAll('input:not([type=date]), select, textarea').forEach(el => { el.value = ''; });
+  document.querySelectorAll('.risk-display').forEach(el => el.className = 'risk-display');
+  document.getElementById('ybt-pct').style.display = 'none';
+  document.getElementById('summary-box').classList.remove('visible');
+  document.getElementById('pat-date').value = new Date().toISOString().split('T')[0];
+  showToast('Formulario limpiado');
+}
+
+// ── Toast ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
