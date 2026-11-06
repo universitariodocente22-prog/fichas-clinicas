@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluación Biomecánica Respiratoria</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --paper: #f5f0e8;
+    --cream: #ede8dc;
+    --accent: #2d6a4f;
+    --accent-light: #52b788;
+    --accent-pale: #d8f3dc;
+    --warn: #b5451b;
+    --warn-pale: #fde8dc;
+    --mid: #6b7280;
+    --border: #c9c0b0;
+    --white: #fafafa;
+    --shadow: rgba(26,26,46,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Instrument Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── EJECUCIÓN DEL TEST ── */
+  details.exec {
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--ink);
+    border-radius: 6px;
+    background: var(--cream);
+    margin-bottom: 1rem;
+  }
+  details.exec summary {
+    cursor: pointer;
+    padding: 0.55rem 0.9rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  details.exec summary::-webkit-details-marker { display: none; }
+  details.exec summary::after { content: '＋'; opacity: 0.5; }
+  details.exec[open] summary::after { content: '－'; }
+  .exec-body { padding: 0.2rem 0.9rem 0.8rem; font-size: 0.78rem; line-height: 1.5; }
+  .exec-meta { display: grid; grid-template-columns: auto 1fr; gap: 0.15rem 0.6rem; margin-bottom: 0.6rem; }
+  .exec-meta b { font-family: 'DM Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--mid); font-weight: 500; padding-top: 0.1rem; }
+  .exec-body h4 { font-family: 'DM Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin: 0.6rem 0 0.25rem; font-weight: 500; }
+  .exec-body ol, .exec-body ul { padding-left: 1.15rem; }
+  .exec-body li { margin-bottom: 0.2rem; }
+  .formula { background: var(--white); border: 1px dashed var(--border); border-radius: 4px; padding: 0.35rem 0.6rem; font-family: 'DM Mono', monospace; font-size: 0.74rem; margin-top: 0.3rem; }
+  @media print { details.exec { break-inside: avoid; } details.exec summary::after { content: ''; } }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2rem 3rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+  }
+  header h1 span {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    opacity: 0.55;
+    margin-bottom: 0.4rem;
+    font-style: normal;
+    text-transform: uppercase;
+  }
+  .header-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+  }
+  .date-field {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    opacity: 0.6;
+    letter-spacing: 0.05em;
+  }
+  #patient-name-input {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: var(--paper);
+    padding: 0.45rem 0.85rem;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    width: 220px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #patient-name-input::placeholder { opacity: 0.4; }
+  #patient-name-input:focus { border-color: var(--accent-light); }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.1rem;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1.5px solid transparent;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.18s;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .btn-primary:hover { background: #1f4f39; border-color: #1f4f39; }
+  .btn-outline {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--border);
+  }
+  .btn-outline:hover { border-color: var(--ink); background: rgba(0,0,0,0.03); }
+  .btn-danger {
+    background: transparent;
+    color: var(--warn);
+    border-color: #e8c4b4;
+  }
+  .btn-danger:hover { background: var(--warn-pale); }
+  .separator { width: 1px; height: 24px; background: var(--border); margin: 0 0.25rem; }
+  .toolbar-label {
+    font-size: 0.72rem;
+    color: var(--mid);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── LAYOUT ── */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 2rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  @media (max-width: 720px) {
+    main { grid-template-columns: 1fr; padding: 1rem; }
+    header { padding: 1.5rem; }
+    .toolbar { padding: 0.75rem 1rem; }
+  }
+
+  /* ── TEST CARD ── */
+  .test-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px var(--shadow);
+    display: flex;
+    flex-direction: column;
+  }
+  .card-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 1.1rem 1.4rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .card-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    line-height: 1;
+    opacity: 0.25;
+    min-width: 2rem;
+  }
+  .card-title-block h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.05rem;
+    line-height: 1.25;
+    letter-spacing: -0.2px;
+  }
+  .card-title-block p {
+    font-size: 0.72rem;
+    opacity: 0.5;
+    margin-top: 0.2rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.04em;
+  }
+
+  .card-body { padding: 1.2rem 1.4rem; flex: 1; }
+
+  /* reference band */
+  .ref-band {
+    background: var(--accent-pale);
+    border: 1px solid #b7e4c7;
+    border-radius: 6px;
+    padding: 0.65rem 0.9rem;
+    margin-bottom: 1rem;
+  }
+  .ref-band-title {
+    font-size: 0.65rem;
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .ref-table { width: 100%; border-collapse: collapse; }
+  .ref-table th, .ref-table td {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    text-align: left;
+  }
+  .ref-table th {
+    font-family: 'DM Mono', monospace;
+    color: var(--accent);
+    font-weight: 500;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .ref-table td { color: var(--ink); }
+  .ref-table tr:not(:last-child) td { border-bottom: 1px dashed #b7e4c7; }
+
+  /* fields */
+  .field-group { margin-bottom: 1rem; }
+  .field-group:last-child { margin-bottom: 0; }
+  .field-label {
+    font-size: 0.7rem;
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mid);
+    margin-bottom: 0.4rem;
+  }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  .field-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+  }
+  .input-wrap { display: flex; flex-direction: column; gap: 0.2rem; }
+  .input-sublabel {
+    font-size: 0.62rem;
+    color: var(--mid);
+    font-family: 'DM Mono', monospace;
+  }
+  input[type="number"], input[type="text"], select, textarea {
+    width: 100%;
+    padding: 0.5rem 0.7rem;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--ink);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(45,106,79,0.12);
+  }
+  textarea { resize: vertical; min-height: 64px; font-size: 0.78rem; line-height: 1.5; }
+
+  /* result chip */
+  .result-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .result-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .chip-normal { background: var(--accent-pale); color: var(--accent); border: 1px solid #b7e4c7; }
+  .chip-altered { background: var(--warn-pale); color: var(--warn); border: 1px solid #f0bfad; }
+  .chip-neutral { background: var(--cream); color: var(--mid); border: 1px solid var(--border); }
+
+  /* pattern select cards */
+  .pattern-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.4rem; }
+  .pattern-opt {
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    padding: 0.55rem 0.7rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .pattern-opt input[type="radio"] { accent-color: var(--accent); }
+  .pattern-opt label { font-size: 0.75rem; cursor: pointer; line-height: 1.3; }
+  .pattern-opt:has(input:checked) {
+    border-color: var(--accent);
+    background: var(--accent-pale);
+  }
+  .pattern-opt.altered:has(input:checked) {
+    border-color: var(--warn);
+    background: var(--warn-pale);
+  }
+
+  /* hoover */
+  .hoover-opts { display: flex; gap: 0.5rem; margin-top: 0.4rem; }
+  .hoover-btn {
+    flex: 1;
+    padding: 0.6rem;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    background: var(--white);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: center;
+  }
+  .hoover-btn.normal-sel { background: var(--accent-pale); border-color: var(--accent); color: var(--accent); }
+  .hoover-btn.altered-sel { background: var(--warn-pale); border-color: var(--warn); color: var(--warn); }
+
+  /* summary card */
+  .summary-card {
+    grid-column: 1 / -1;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+  .summary-header {
+    background: #2d3748;
+    color: var(--paper);
+    padding: 1rem 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .summary-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+  }
+  .summary-body { padding: 1.4rem; }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .summary-item {
+    background: var(--cream);
+    border-radius: 6px;
+    padding: 0.7rem 0.9rem;
+    border-left: 3px solid var(--border);
+  }
+  .summary-item.ok { border-left-color: var(--accent-light); }
+  .summary-item.alt { border-left-color: var(--warn); }
+  .summary-item-title {
+    font-size: 0.65rem;
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mid);
+    margin-bottom: 0.3rem;
+  }
+  .summary-item-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  #summary-conclusion {
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.82rem;
+    width: 100%;
+    min-height: 90px;
+    font-family: 'Instrument Sans', sans-serif;
+    color: var(--ink);
+    background: var(--white);
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.18s;
+    line-height: 1.55;
+  }
+  #summary-conclusion:focus { border-color: var(--accent); }
+
+  /* save toast */
+  #toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.75rem 1.2rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-family: 'DM Mono', monospace;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ══ PRINT STYLES ══ */
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    body { background: #fff; font-size: 11px; }
+    header { background: #1a1a2e !important; padding: 1rem 1.5rem; }
+    .toolbar, .btn, #toast { display: none !important; }
+    main {
+      max-width: 100%;
+      padding: 0.5rem;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .test-card, .summary-card {
+      break-inside: avoid;
+      box-shadow: none;
+      border: 1px solid #ccc;
+    }
+    .card-header { background: #1a1a2e !important; }
+    input, textarea, select {
+      border: 1px solid #ccc;
+      padding: 0.25rem 0.4rem;
+    }
+    .pattern-opt { padding: 0.3rem 0.4rem; }
+    .hoover-btn { padding: 0.35rem; }
+    .summary-card { grid-column: 1 / -1; }
+    .ref-band { background: #e8f5ed !important; }
+    .summary-item { background: #f5f5f5 !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>
+    <span>Ficha de Evaluación Clínica</span>
+    Tests Biomecánicos<br>de la Función Respiratoria
+  </h1>
+  <div class="header-meta">
+    <div class="date-field" id="date-display"></div>
+    <input type="text" id="patient-name-input" placeholder="Nombre del paciente…">
+  </div>
+</header>
+
+<div class="toolbar">
+  <span class="toolbar-label">Acciones:</span>
+  <button class="btn btn-primary" onclick="saveData()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+    Guardar
+  </button>
+  <button class="btn btn-outline" onclick="loadData()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Cargar último
+  </button>
+  <div class="separator"></div>
+  <button class="btn btn-outline" onclick="generateSummary()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    Actualizar resumen
+  </button>
+  <div class="separator"></div>
+  <button class="btn btn-primary" onclick="window.print()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Imprimir / PDF
+  </button>
+  <div class="separator"></div>
+  <button class="btn btn-danger" onclick="clearData()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+    Limpiar
+  </button>
+</div>
+
+<main>
+
+  <!-- ══ TEST 1: MOLL & WRIGHT ══ -->
+  <div class="test-card">
+    <div class="card-header">
+      <div class="card-num">01</div>
+      <div class="card-title-block">
+        <h2>Expansión Torácica — Moll & Wright</h2>
+        <p>Cinta métrica flexible · Bipedestación o sedestación</p>
+      </div>
+    </div>
+    <div class="card-body">
+
+      <details class="exec" open>
+        <summary>Ejecución del test</summary>
+        <div class="exec-body">
+          <div class="exec-meta">
+            <b>Objetivo</b><span>Evaluar cuantitativamente la movilidad torácica en inspiración y espiración.</span>
+            <b>Material</b><span>Cinta métrica flexible.</span>
+            <b>Posición</b><span>Bipedestación o sedestación, tronco relajado, brazos ligeramente separados.</span>
+          </div>
+          <h4>Procedimiento</h4>
+          <ol>
+            <li><strong>Nivel axilar:</strong> colocar la cinta alrededor del tórax a nivel del 3.er espacio intercostal. Solicitar espiración máxima y luego inspiración máxima; registrar ambas medidas.</li>
+            <li><strong>Nivel xifoideo:</strong> colocar la cinta a nivel del apéndice xifoides y repetir el procedimiento.</li>
+            <li><strong>Nivel basal:</strong> colocar la cinta alrededor de las bases costales inferiores y repetir el procedimiento.</li>
+          </ol>
+          <div class="formula">Expansión torácica = Inspiración máxima − Espiración máxima</div>
+          <h4>Interpretación</h4>
+          <ul>
+            <li><strong>↓ expansión:</strong> rigidez torácica, hipomovilidad costal, restricción pulmonar.</li>
+            <li><strong>Asimetría:</strong> alteración unilateral, dolor, disfunción biomecánica.</li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="ref-band">
+        <div class="ref-band-title">▸ Valores de referencia</div>
+        <table class="ref-table">
+          <tr><th>Nivel</th><th>Normal</th></tr>
+          <tr><td>Axilar (3.er EIC)</td><td>3 – 5 cm</td></tr>
+          <tr><td>Xifoideo</td><td>4 – 7 cm</td></tr>
+          <tr><td>Basal (costillas inf.)</td><td>3 – 5 cm</td></tr>
+        </table>
+      </div>
+
+      <!-- AXILAR -->
+      <div class="field-group">
+        <div class="field-label">A. Nivel Axilar (3.er EIC)</div>
+        <div class="field-row">
+          <div class="input-wrap">
+            <span class="input-sublabel">Espiración máx. (cm)</span>
+            <input type="number" id="ax_esp" step="0.1" min="0" placeholder="—" oninput="calcMoll()">
+          </div>
+          <div class="input-wrap">
+            <span class="input-sublabel">Inspiración máx. (cm)</span>
+            <input type="number" id="ax_ins" step="0.1" min="0" placeholder="—" oninput="calcMoll()">
+          </div>
+        </div>
+        <div class="result-row">
+          <span class="result-chip chip-neutral" id="ax_result">Expansión: —</span>
+          <span class="result-chip chip-neutral" id="ax_interp">—</span>
+        </div>
+      </div>
+
+      <!-- XIFOIDEO -->
+      <div class="field-group">
+        <div class="field-label">B. Nivel Xifoideo</div>
+        <div class="field-row">
+          <div class="input-wrap">
+            <span class="input-sublabel">Espiración máx. (cm)</span>
+            <input type="number" id="xi_esp" step="0.1" min="0" placeholder="—" oninput="calcMoll()">
+          </div>
+          <div class="input-wrap">
+            <span class="input-sublabel">Inspiración máx. (cm)</span>
+            <input type="number" id="xi_ins" step="0.1" min="0" placeholder="—" oninput="calcMoll()">
+          </div>
+        </div>
+        <div class="result-row">
+          <span class="result-chip chip-neutral" id="xi_result">Expansión: —</span>
+          <span class="result-chip chip-neutral" id="xi_interp">—</span>
+        </div>
+      </div>
+
+      <!-- BASAL -->
+      <div class="field-group">
+        <div class="field-label">C. Nivel Basal</div>
+        <div class="field-row">
+          <div class="input-wrap">
+            <span class="input-sublabel">Espiración máx. (cm)</span>
+            <input type="number" id="ba_esp" step="0.1" min="0" placeholder="—" oninput="calcMoll()">
+          </div>
+          <div class="input-wrap">
+            <span class="input-sublabel">Inspiración máx. (cm)</span>
+            <input type="number" id="ba_ins" step="0.1" min="0" placeholder="—" oninput="calcMoll()">
+          </div>
+        </div>
+        <div class="result-row">
+          <span class="result-chip chip-neutral" id="ba_result">Expansión: —</span>
+          <span class="result-chip chip-neutral" id="ba_interp">—</span>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Observaciones</div>
+        <textarea id="moll_obs" placeholder="Asimetría, dolor, hallazgos relevantes…"></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ TEST 2: RESPIRACIÓN DIAFRAGMÁTICA ══ -->
+  <div class="test-card">
+    <div class="card-header">
+      <div class="card-num">02</div>
+      <div class="card-title-block">
+        <h2>Test de Respiración Diafragmática</h2>
+        <p>Decúbito supino o sedestación relajada</p>
+      </div>
+    </div>
+    <div class="card-body">
+
+      <details class="exec" open>
+        <summary>Ejecución del test</summary>
+        <div class="exec-body">
+          <div class="exec-meta">
+            <b>Objetivo</b><span>Evaluar el predominio y la eficacia del patrón diafragmático.</span>
+            <b>Posición</b><span>Decúbito supino o sedestación relajada.</span>
+          </div>
+          <h4>Procedimiento</h4>
+          <ol>
+            <li><strong>Colocación de manos:</strong> una mano sobre el tórax superior y la otra sobre el abdomen (región epigástrica).</li>
+            <li><strong>Ejecución:</strong> solicitar respiración tranquila y luego respiración profunda.</li>
+            <li><strong>Observación:</strong> evaluar el movimiento abdominal, la elevación torácica y la coordinación toracoabdominal.</li>
+          </ol>
+          <h4>Interpretación</h4>
+          <ul>
+            <li><strong>Patrón alterado:</strong> respiración apical predominante, elevación excesiva de hombros, asincronía toracoabdominal o respiración paradójica.</li>
+            <li><strong>Sugiere:</strong> debilidad diafragmática, fatiga respiratoria, hiperinsuflación, disfunción biomecánica.</li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="ref-band">
+        <div class="ref-band-title">▸ Patrón de referencia normal</div>
+        <table class="ref-table">
+          <tr><th>Parámetro</th><th>Normal</th></tr>
+          <tr><td>Predominio</td><td>Abdominal moderado</td></tr>
+          <tr><td>Expansión</td><td>Coordinada</td></tr>
+          <tr><td>Musculatura accesoria</td><td>Baja participación</td></tr>
+        </table>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Patrón observado</div>
+        <div class="pattern-grid">
+          <div class="pattern-opt">
+            <input type="radio" name="diaf_patron" id="dp1" value="normal" onchange="updateDiafResult()">
+            <label for="dp1">✓ Normal — Predominio abdominal</label>
+          </div>
+          <div class="pattern-opt altered">
+            <input type="radio" name="diaf_patron" id="dp2" value="apical" onchange="updateDiafResult()">
+            <label for="dp2">⚠ Respiración apical predominante</label>
+          </div>
+          <div class="pattern-opt altered">
+            <input type="radio" name="diaf_patron" id="dp3" value="accesoria" onchange="updateDiafResult()">
+            <label for="dp3">⚠ Elevación excesiva de hombros</label>
+          </div>
+          <div class="pattern-opt altered">
+            <input type="radio" name="diaf_patron" id="dp4" value="paradojica" onchange="updateDiafResult()">
+            <label for="dp4">⚠ Respiración paradójica</label>
+          </div>
+          <div class="pattern-opt altered">
+            <input type="radio" name="diaf_patron" id="dp5" value="asincronia" onchange="updateDiafResult()">
+            <label for="dp5">⚠ Asincronía toracoabdominal</label>
+          </div>
+        </div>
+        <div class="result-row" style="margin-top:0.7rem">
+          <span class="result-chip chip-neutral" id="diaf_result">Sin selección</span>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Coordinación toracoabdominal</div>
+        <select id="diaf_coord">
+          <option value="">— Seleccionar —</option>
+          <option value="normal">Normal — sincrónica</option>
+          <option value="retrasada">Ligeramente retrasada</option>
+          <option value="asincrona">Asincrónica</option>
+          <option value="paradojica">Paradójica</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Impresión clínica</div>
+        <div class="pattern-grid">
+          <div class="pattern-opt">
+            <input type="checkbox" id="diaf_c1"> <label for="diaf_c1">Debilidad diafragmática</label>
+          </div>
+          <div class="pattern-opt">
+            <input type="checkbox" id="diaf_c2"> <label for="diaf_c2">Fatiga respiratoria</label>
+          </div>
+          <div class="pattern-opt">
+            <input type="checkbox" id="diaf_c3"> <label for="diaf_c3">Hiperinsuflación</label>
+          </div>
+          <div class="pattern-opt">
+            <input type="checkbox" id="diaf_c4"> <label for="diaf_c4">Disfunción biomecánica</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Observaciones</div>
+        <textarea id="diaf_obs" placeholder="Hallazgos adicionales…"></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ TEST 3: HOOVER ══ -->
+  <div class="test-card">
+    <div class="card-header">
+      <div class="card-num">03</div>
+      <div class="card-title-block">
+        <h2>Test de Hoover</h2>
+        <p>Sedestación o decúbito supino · Costillas inferiores laterales</p>
+      </div>
+    </div>
+    <div class="card-body">
+
+      <details class="exec" open>
+        <summary>Ejecución del test</summary>
+        <div class="exec-body">
+          <div class="exec-meta">
+            <b>Objetivo</b><span>Detectar disfunción diafragmática e hiperinsuflación pulmonar.</span>
+            <b>Posición</b><span>Sedestación o decúbito supino.</span>
+          </div>
+          <h4>Procedimiento</h4>
+          <ol>
+            <li><strong>Observación:</strong> centrar la atención en las costillas inferiores laterales.</li>
+            <li><strong>Ejecución:</strong> solicitar una inspiración profunda.</li>
+            <li><strong>Evaluación:</strong> observar la dirección del movimiento costal inferior.</li>
+          </ol>
+          <h4>Interpretación</h4>
+          <ul>
+            <li><strong>Normal:</strong> las costillas inferiores se desplazan hacia afuera y arriba durante la inspiración.</li>
+            <li><strong>Positivo:</strong> movimiento inspiratorio hacia adentro (retracción costal).</li>
+            <li><strong>Frecuente en:</strong> EPOC, hiperinsuflación pulmonar, fatiga diafragmática, alteración mecánica ventilatoria.</li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="ref-band">
+        <div class="ref-band-title">▸ Valor de referencia</div>
+        <table class="ref-table">
+          <tr><th>Resultado</th><th>Movimiento costal inferior</th></tr>
+          <tr><td>Normal (–)</td><td>Hacia afuera y arriba en inspiración</td></tr>
+          <tr><td>Positivo (+)</td><td>Retracción hacia adentro en inspiración</td></tr>
+        </table>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Resultado del test</div>
+        <div class="hoover-opts">
+          <button class="hoover-btn" id="hoover_neg" onclick="setHoover('neg')">
+            ✓ Negativo (Normal)<br><small style="opacity:0.7;font-weight:400">Expansión lateral</small>
+          </button>
+          <button class="hoover-btn" id="hoover_pos" onclick="setHoover('pos')">
+            ⚠ Positivo (Alterado)<br><small style="opacity:0.7;font-weight:400">Retracción costal</small>
+          </button>
+        </div>
+        <input type="hidden" id="hoover_val">
+        <div class="result-row" style="margin-top:0.7rem">
+          <span class="result-chip chip-neutral" id="hoover_result">Sin selección</span>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Lado afectado (si positivo)</div>
+        <select id="hoover_lado">
+          <option value="">— N/A —</option>
+          <option value="bilateral">Bilateral</option>
+          <option value="derecho">Hemitórax derecho</option>
+          <option value="izquierdo">Hemitórax izquierdo</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Impresión clínica (si positivo)</div>
+        <div class="pattern-grid">
+          <div class="pattern-opt"><input type="checkbox" id="hov_c1"> <label for="hov_c1">EPOC</label></div>
+          <div class="pattern-opt"><input type="checkbox" id="hov_c2"> <label for="hov_c2">Hiperinsuflación pulmonar</label></div>
+          <div class="pattern-opt"><input type="checkbox" id="hov_c3"> <label for="hov_c3">Fatiga diafragmática</label></div>
+          <div class="pattern-opt"><input type="checkbox" id="hov_c4"> <label for="hov_c4">Alteración mecánica ventilatoria</label></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Observaciones</div>
+        <textarea id="hoover_obs" placeholder="Hallazgos adicionales…"></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ TEST 4: ÍNDICE DE MOVILIDAD COSTAL ══ -->
+  <div class="test-card">
+    <div class="card-header">
+      <div class="card-num">04</div>
+      <div class="card-title-block">
+        <h2>Índice de Movilidad Costal</h2>
+        <p>Sedestación · Evaluación bilateral segmentaria</p>
+      </div>
+    </div>
+    <div class="card-body">
+
+      <details class="exec" open>
+        <summary>Ejecución del test</summary>
+        <div class="exec-body">
+          <div class="exec-meta">
+            <b>Objetivo</b><span>Evaluar la movilidad segmentaria y la simetría costal.</span>
+            <b>Posición</b><span>Sedestación.</span>
+          </div>
+          <h4>Procedimiento</h4>
+          <ol>
+            <li><strong>Colocación manual:</strong> manos sobre regiones costales simétricas: superiores, medias e inferiores.</li>
+            <li><strong>Ejecución:</strong> solicitar inspiración profunda y espiración completa.</li>
+            <li><strong>Evaluación:</strong> comparar amplitud, velocidad, dirección y sincronía bilateral.</li>
+          </ol>
+          <h4>Interpretación</h4>
+          <ul>
+            <li><strong>Alterado:</strong> hipomovilidad unilateral, retraso de un hemitórax, rigidez localizada, movimiento paradójico.</li>
+            <li><strong>Sugiere:</strong> bloqueo costovertebral, restricción fascial, dolor musculoesquelético, alteración postural, disfunción ventilatoria localizada.</li>
+          </ul>
+        </div>
+      </details>
+
+      <div class="ref-band">
+        <div class="ref-band-title">▸ Parámetros de referencia</div>
+        <table class="ref-table">
+          <tr><th>Normal</th><th>Alterado</th></tr>
+          <tr><td>Movimiento simétrico</td><td>Hipomovilidad unilateral</td></tr>
+          <tr><td>Expansión uniforme</td><td>Retraso de un hemitórax</td></tr>
+          <tr><td>Buena elasticidad</td><td>Rigidez localizada / paradójica</td></tr>
+        </table>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Región Superior</div>
+        <div class="field-row-3">
+          <div class="input-wrap">
+            <span class="input-sublabel">Simetría</span>
+            <select id="sup_sim">
+              <option value="">—</option>
+              <option value="normal">Normal</option>
+              <option value="alterada">Alterada</option>
+            </select>
+          </div>
+          <div class="input-wrap">
+            <span class="input-sublabel">Amplitud</span>
+            <select id="sup_amp">
+              <option value="">—</option>
+              <option value="normal">Normal</option>
+              <option value="reducida">Reducida</option>
+              <option value="aumentada">Aumentada</option>
+            </select>
+          </div>
+          <div class="input-wrap">
+            <span class="input-sublabel">Lado afectado</span>
+            <select id="sup_lado">
+              <option value="">—</option>
+              <option value="D">Derecho</option>
+              <option value="I">Izquierdo</option>
+              <option value="B">Bilateral</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Región Media</div>
+        <div class="field-row-3">
+          <div class="input-wrap">
+            <span class="input-sublabel">Simetría</span>
+            <select id="med_sim">
+              <option value="">—</option>
+              <option value="normal">Normal</option>
+              <option value="alterada">Alterada</option>
+            </select>
+          </div>
+          <div class="input-wrap">
+            <span class="input-sublabel">Amplitud</span>
+            <select id="med_amp">
+              <option value="">—</option>
+              <option value="normal">Normal</option>
+              <option value="reducida">Reducida</option>
+              <option value="aumentada">Aumentada</option>
+            </select>
+          </div>
+          <div class="input-wrap">
+            <span class="input-sublabel">Lado afectado</span>
+            <select id="med_lado">
+              <option value="">—</option>
+              <option value="D">Derecho</option>
+              <option value="I">Izquierdo</option>
+              <option value="B">Bilateral</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Región Inferior</div>
+        <div class="field-row-3">
+          <div class="input-wrap">
+            <span class="input-sublabel">Simetría</span>
+            <select id="inf_sim">
+              <option value="">—</option>
+              <option value="normal">Normal</option>
+              <option value="alterada">Alterada</option>
+            </select>
+          </div>
+          <div class="input-wrap">
+            <span class="input-sublabel">Amplitud</span>
+            <select id="inf_amp">
+              <option value="">—</option>
+              <option value="normal">Normal</option>
+              <option value="reducida">Reducida</option>
+              <option value="aumentada">Aumentada</option>
+            </select>
+          </div>
+          <div class="input-wrap">
+            <span class="input-sublabel">Lado afectado</span>
+            <select id="inf_lado">
+              <option value="">—</option>
+              <option value="D">Derecho</option>
+              <option value="I">Izquierdo</option>
+              <option value="B">Bilateral</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Hallazgos específicos</div>
+        <div class="pattern-grid">
+          <div class="pattern-opt"><input type="checkbox" id="imc_c1"> <label for="imc_c1">Bloqueo costovertebral</label></div>
+          <div class="pattern-opt"><input type="checkbox" id="imc_c2"> <label for="imc_c2">Restricción fascial</label></div>
+          <div class="pattern-opt"><input type="checkbox" id="imc_c3"> <label for="imc_c3">Dolor musculoesquelético</label></div>
+          <div class="pattern-opt"><input type="checkbox" id="imc_c4"> <label for="imc_c4">Alteración postural</label></div>
+          <div class="pattern-opt"><input type="checkbox" id="imc_c5"> <label for="imc_c5">Disfunción ventilatoria localizada</label></div>
+          <div class="pattern-opt"><input type="checkbox" id="imc_c6"> <label for="imc_c6">Movimiento paradójico</label></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Observaciones</div>
+        <textarea id="imc_obs" placeholder="Retraso en hemitórax, rigidez localizada…"></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ RESUMEN ══ -->
+  <div class="summary-card">
+    <div class="summary-header">
+      <h2>Resumen de Evaluación</h2>
+      <span style="font-family:'DM Mono',monospace;font-size:0.72rem;opacity:0.5;letter-spacing:0.05em">AUTO-GENERADO</span>
+    </div>
+    <div class="summary-body">
+      <div class="summary-grid" id="summary-grid">
+        <div class="summary-item"><div class="summary-item-title">Expansión Axilar</div><div class="summary-item-val" id="s_ax">—</div></div>
+        <div class="summary-item"><div class="summary-item-title">Expansión Xifoidea</div><div class="summary-item-val" id="s_xi">—</div></div>
+        <div class="summary-item"><div class="summary-item-title">Expansión Basal</div><div class="summary-item-val" id="s_ba">—</div></div>
+        <div class="summary-item"><div class="summary-item-title">Patrón Diafragmático</div><div class="summary-item-val" id="s_diaf">—</div></div>
+        <div class="summary-item"><div class="summary-item-title">Test de Hoover</div><div class="summary-item-val" id="s_hoover">—</div></div>
+        <div class="summary-item"><div class="summary-item-title">Movilidad Costal</div><div class="summary-item-val" id="s_imc">—</div></div>
+      </div>
+      <div class="field-label" style="margin-bottom:0.5rem">Conclusión clínica / Plan terapéutico</div>
+      <textarea id="summary-conclusion" placeholder="Escriba aquí la conclusión integrada de los hallazgos, diagnóstico funcional y orientación terapéutica…"></textarea>
+    </div>
+  </div>
+
+</main>
+
+<div id="toast">✓ Datos guardados correctamente</div>
+
+<script>
+// ── DATE ──
+const d = new Date();
+document.getElementById('date-display').textContent =
+  d.toLocaleDateString('es-ES',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+// ── MOLL & WRIGHT CALC ──
+const mollRanges = {
+  ax: [3,5], xi: [4,7], ba: [3,5]
+};
+function calcMoll() {
+  ['ax','xi','ba'].forEach(lvl => {
+    const esp = parseFloat(document.getElementById(lvl+'_esp').value);
+    const ins = parseFloat(document.getElementById(lvl+'_ins').value);
+    const resEl = document.getElementById(lvl+'_result');
+    const intEl = document.getElementById(lvl+'_interp');
+    if (!isNaN(esp) && !isNaN(ins)) {
+      const exp = (ins - esp).toFixed(1);
+      resEl.textContent = `Expansión: ${exp} cm`;
+      const [lo, hi] = mollRanges[lvl];
+      const val = parseFloat(exp);
+      if (val >= lo && val <= hi) {
+        resEl.className = 'result-chip chip-normal';
+        intEl.textContent = '✓ Dentro del rango normal';
+        intEl.className = 'result-chip chip-normal';
+      } else if (val < lo) {
+        resEl.className = 'result-chip chip-altered';
+        intEl.textContent = '↓ Expansión disminuida';
+        intEl.className = 'result-chip chip-altered';
+      } else {
+        resEl.className = 'result-chip chip-normal';
+        intEl.textContent = '↑ Expansión aumentada';
+        intEl.className = 'result-chip chip-normal';
+      }
+    } else {
+      resEl.textContent = 'Expansión: —';
+      resEl.className = 'result-chip chip-neutral';
+      intEl.textContent = '—';
+      intEl.className = 'result-chip chip-neutral';
+    }
+  });
+  generateSummary();
+}
+
+// ── DIAFRAGMA ──
+const diafLabels = {
+  normal: {label: '✓ Patrón normal', cls: 'chip-normal'},
+  apical: {label: '⚠ Respiración apical', cls: 'chip-altered'},
+  accesoria: {label: '⚠ Musculatura accesoria', cls: 'chip-altered'},
+  paradojica: {label: '⚠ Respiración paradójica', cls: 'chip-altered'},
+  asincronia: {label: '⚠ Asincronía toracoabdominal', cls: 'chip-altered'},
+};
+function updateDiafResult() {
+  const sel = document.querySelector('input[name="diaf_patron"]:checked');
+  const el = document.getElementById('diaf_result');
+  if (sel) {
+    const d = diafLabels[sel.value];
+    el.textContent = d.label;
+    el.className = 'result-chip ' + d.cls;
+  }
+  generateSummary();
+}
+
+// ── HOOVER ──
+let hooverVal = '';
+function setHoover(v) {
+  hooverVal = v;
+  document.getElementById('hoover_val').value = v;
+  document.getElementById('hoover_neg').className = 'hoover-btn' + (v==='neg'?' normal-sel':'');
+  document.getElementById('hoover_pos').className = 'hoover-btn' + (v==='pos'?' altered-sel':'');
+  const el = document.getElementById('hoover_result');
+  if (v==='neg') { el.textContent='✓ Negativo — Normal'; el.className='result-chip chip-normal'; }
+  else { el.textContent='⚠ Positivo — Alterado'; el.className='result-chip chip-altered'; }
+  generateSummary();
+}
+
+// ── SUMMARY ──
+function generateSummary() {
+  const getExp = (lvl) => {
+    const e = parseFloat(document.getElementById(lvl+'_esp').value);
+    const i = parseFloat(document.getElementById(lvl+'_ins').value);
+    if (!isNaN(e) && !isNaN(i)) return (i-e).toFixed(1)+' cm';
+    return '—';
+  };
+  document.getElementById('s_ax').textContent = getExp('ax');
+  document.getElementById('s_xi').textContent = getExp('xi');
+  document.getElementById('s_ba').textContent = getExp('ba');
+
+  const dSel = document.querySelector('input[name="diaf_patron"]:checked');
+  document.getElementById('s_diaf').textContent = dSel ? diafLabels[dSel.value].label.replace(/[✓⚠]\s/,'') : '—';
+
+  document.getElementById('s_hoover').textContent =
+    hooverVal === 'neg' ? 'Negativo' : hooverVal === 'pos' ? 'Positivo' : '—';
+
+  const regions = ['sup','med','inf'].map(r => {
+    const sim = document.getElementById(r+'_sim').value;
+    return sim === 'alterada' ? r[0].toUpperCase()+'↓' : null;
+  }).filter(Boolean);
+  document.getElementById('s_imc').textContent = regions.length ? regions.join(', ')+' alterado' : '—';
+
+  // color chips
+  ['ax','xi','ba'].forEach((lvl,i) => {
+    const val = parseFloat(getExp(lvl));
+    const [lo,hi] = [[3,5],[4,7],[3,5]][i];
+    const el = document.getElementById(['s_ax','s_xi','s_ba'][i]).closest('.summary-item');
+    el.className = 'summary-item' + (!isNaN(val) ? (val>=lo&&val<=hi ? ' ok' : ' alt') : '');
+  });
+  const hEl = document.getElementById('s_hoover').closest('.summary-item');
+  hEl.className = 'summary-item' + (hooverVal==='neg' ? ' ok' : hooverVal==='pos' ? ' alt' : '');
+  const dEl = document.getElementById('s_diaf').closest('.summary-item');
+  dEl.className = 'summary-item' + (dSel ? (dSel.value==='normal' ? ' ok' : ' alt') : '');
+}
+
+// ── SAVE / LOAD ──
+function collectData() {
+  const data = { patient: document.getElementById('patient-name-input').value, ts: new Date().toISOString() };
+  const ids = [
+    'ax_esp','ax_ins','xi_esp','xi_ins','ba_esp','ba_ins','moll_obs',
+    'diaf_coord','diaf_obs','hoover_lado','hoover_obs',
+    'sup_sim','sup_amp','sup_lado','med_sim','med_amp','med_lado','inf_sim','inf_amp','inf_lado','imc_obs',
+    'summary-conclusion'
+  ];
+  ids.forEach(id => { const el = document.getElementById(id); if(el) data[id] = el.value; });
+  const radios = document.querySelectorAll('input[type="radio"]');
+  radios.forEach(r => { if(r.checked) data['radio_'+r.name] = r.value; });
+  const checks = document.querySelectorAll('input[type="checkbox"]');
+  checks.forEach(c => { data['chk_'+c.id] = c.checked; });
+  data['hoover_val'] = hooverVal;
+  return data;
+}
+
+function applyData(data) {
+  if (!data) return;
+  if (data.patient) document.getElementById('patient-name-input').value = data.patient;
+  const ids = [
+    'ax_esp','ax_ins','xi_esp','xi_ins','ba_esp','ba_ins','moll_obs',
+    'diaf_coord','diaf_obs','hoover_lado','hoover_obs',
+    'sup_sim','sup_amp','sup_lado','med_sim','med_amp','med_lado','inf_sim','inf_amp','inf_lado','imc_obs',
+    'summary-conclusion'
+  ];
+  ids.forEach(id => { if (data[id]!==undefined) { const el=document.getElementById(id); if(el) el.value=data[id]; }});
+  document.querySelectorAll('input[type="radio"]').forEach(r => {
+    if(data['radio_'+r.name]===r.value) r.checked=true;
+  });
+  document.querySelectorAll('input[type="checkbox"]').forEach(c => {
+    if(data['chk_'+c.id]!==undefined) c.checked=data['chk_'+c.id];
+  });
+  if(data.hoover_val) setHoover(data.hoover_val);
+  updateDiafResult();
+  calcMoll();
+}
+
+function saveData() {
+  try {
+    localStorage.setItem('resp_eval_v1', JSON.stringify(collectData()));
+    showToast('✓ Datos guardados correctamente');
+  } catch(e) { showToast('✗ Error al guardar'); }
+}
+function loadData() {
+  try {
+    const raw = localStorage.getItem('resp_eval_v1');
+    if (!raw) { showToast('No hay datos guardados'); return; }
+    applyData(JSON.parse(raw));
+    showToast('✓ Datos cargados correctamente');
+  } catch(e) { showToast('✗ Error al cargar'); }
+}
+function clearData() {
+  if (!confirm('¿Limpiar todos los campos?')) return;
+  document.querySelectorAll('input[type="number"],input[type="text"],textarea').forEach(el => el.value='');
+  document.querySelectorAll('select').forEach(el => el.selectedIndex=0);
+  document.querySelectorAll('input[type="radio"],input[type="checkbox"]').forEach(el => el.checked=false);
+  hooverVal='';
+  document.getElementById('hoover_neg').className='hoover-btn';
+  document.getElementById('hoover_pos').className='hoover-btn';
+  document.getElementById('hoover_result').textContent='Sin selección';
+  document.getElementById('hoover_result').className='result-chip chip-neutral';
+  document.getElementById('diaf_result').textContent='Sin selección';
+  document.getElementById('diaf_result').className='result-chip chip-neutral';
+  ['ax','xi','ba'].forEach(lvl=>{
+    document.getElementById(lvl+'_result').textContent='Expansión: —';
+    document.getElementById(lvl+'_result').className='result-chip chip-neutral';
+    document.getElementById(lvl+'_interp').textContent='—';
+    document.getElementById(lvl+'_interp').className='result-chip chip-neutral';
+  });
+  generateSummary();
+  showToast('Formulario limpiado');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+generateSummary();
+</script>
+</body>
+</html>
