@@ -55,6 +55,7 @@
       if(data.version!==1 || !data.fields || typeof data.fields!=='object') throw new Error('Formato');
       if(!confirm('¿Recuperar la ficha guardada y reemplazar los datos actuales?')) return;
       form.reset();
+      document.dispatchEvent(new Event('reset-stopwatches'));
       form.querySelectorAll('input,select,textarea').forEach(el=>{
         if(Object.prototype.hasOwnProperty.call(data.fields,el.id) && typeof data.fields[el.id]==='string') el.value=data.fields[el.id];
       });
@@ -64,6 +65,7 @@
   get('clear').addEventListener('click',()=>{
     if(!confirm('¿Limpiar esta ficha? También se eliminará la copia guardada en este navegador.'))return;
     form.reset();
+    document.dispatchEvent(new Event('reset-stopwatches'));
     let removed=true;
     try{localStorage.removeItem(key);}catch{removed=false;}
     calculate(); status(removed?'Ficha y copia guardada eliminadas.':'Ficha limpiada. No se pudo eliminar la copia guardada.');
