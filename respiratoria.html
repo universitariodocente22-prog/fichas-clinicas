@@ -485,9 +485,10 @@
   }
 </style>
 <link rel="stylesheet" href="styles.css">
+<script src="live-charts.js" defer></script>
 </head>
 <body>
-<a class="skip-link" href="#contenido">Ir al contenido</a><div class="academic-bar"><a class="academic-brand" href="index.html">Universidad Nacional del Oriente, Biomecánica 1<small>Lic. Luis Castro</small></a><nav class="academic-nav" aria-label="Evaluaciones"><a href="index.html">Inicio</a><a href="ficha_goniometria.html">Goniometría</a><a href="respiratoria.html" aria-current="page">Respiratoria</a><a href="evaluacion_postura_dinamica.html">Postura</a><a href="marcha_carrera.html">Marcha y carrera</a></nav></div>
+<a class="skip-link" href="#contenido">Ir al contenido</a><div class="academic-bar"><a class="academic-brand" href="index.html"><span class="app-mark" aria-hidden="true">B<span>1</span></span><span>Biomecánica 1<small>Universidad Nacional del Oriente</small></span></a><p class="nav-caption">ESPACIO DE PRÁCTICA</p><nav class="academic-nav" aria-label="Evaluaciones"><a href="index.html" aria-label="Inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H6V10m4 10v-7h4v7"/></svg><span class="nav-long">Inicio</span><span class="nav-short" aria-hidden="true">Inicio</span></a><a href="ficha_goniometria.html" aria-label="Goniometría"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19 16 4M4 19h17M9 13a9 9 0 0 1 5 6"/><circle cx="4" cy="19" r="1"/></svg><span class="nav-long">Goniometría</span><span class="nav-short" aria-hidden="true">Gonio.</span></a><a href="respiratoria.html" aria-label="Respiratoria" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v9m0-4C7 2 3 9 3 16s7 4 7 0v-5m2-3c5-6 9 1 9 8s-7 4-7 0v-5"/></svg><span class="nav-long">Respiratoria</span><span class="nav-short" aria-hidden="true">Resp.</span></a><a href="evaluacion_postura_dinamica.html" aria-label="Valoración postural dinámica"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4" r="2"/><path d="M12 6v9m-7-4 7-3 7 3m-7 4-4 6m4-6 4 6"/></svg><span class="nav-long">Valoración postural dinámica</span><span class="nav-short" aria-hidden="true">Dinámica</span></a><a href="marcha_carrera.html" aria-label="Marcha y carrera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="15" cy="4" r="2"/><path d="m6 10 5-3 5 4h5m-10-4-2 7 5 3v5M9 14l-4 7"/></svg><span class="nav-long">Marcha y carrera</span><span class="nav-short" aria-hidden="true">Marcha</span></a></nav><div class="academic-teacher"><span class="teacher-avatar" aria-hidden="true">LC</span><span>Lic. Luis Castro<small>Docente · Biomecánica 1</small></span></div></div>
 
 <header>
   <h1>
@@ -527,7 +528,7 @@
   </button>
 </div>
 
-<main id="contenido" tabindex="-1">
+<main id="contenido" tabindex="-1"><section class="live-chart-card" id="live-chart" aria-labelledby="chart-heading"></section>
 
   <!-- ══ TEST 1: MOLL & WRIGHT ══ -->
   <div class="test-card">
